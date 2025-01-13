@@ -4,15 +4,119 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
 
-    <title>Example Student's HCDE 439 Physical Computing Page!</title>
+    <title>Vatsal Chandel A1 Blink!</title>
 
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Example Student's Assignment 1!</h1>
-    <div class="header">
-      <img src="red-panda.jpg" />
-      <p>Here is all the documentation for assignment 1!</p>
+    <h1>Vatsal Chandel A1 Blink!!</h1>
+
+    <br>
+
+    <h2>Circuit and Gif</h2>
+
+    <div class="image-container">
+      <div class="image-wrapper">
+
+        <img class="circuit" src="img/A1/Curcuit.jpeg" />
+        <p>For the circuit, I chose to use Red, Blue and Green LEDs.
+          I used a resistance of 220 ohms for each LED because after 
+          doing the calculations, I found that the maximum Resistance I would need is 
+          160 ohms. 220 was the closest standard resistance value.
+        </p>
+
+      </div>
+
+      <div class="image-wrapper">
+
+        <img src="img/A1/a1Blink.gif" />
+        <p>This is the gif for the circuit</p>
+
+      </div>
     </div>
+
+    <h2>Schematic and Resistance</h2>
+
+    <div class="image-container">
+      <div class="image-wrapper">
+
+        <img src="img/A1/Schematic.jpeg" />
+        <p>This is the schematic for the circuit</p>
+
+      </div>
+      <div class="image-wrapper">
+
+        <img src="img/A1/Resistance.jpeg" />
+        <p>These are the calculations for the resistance of the LEDs
+          I found that Blue needed a minimum of 85 ohms, Red and Green needed a minimum of 160 ohms.
+        </p>
+
+      </div>
+    </div>
+
+    <h2>Code for A1 Blink</h2>
+    <code>
+      <pre>
+        void setup() {
+ 
+          // set up pins 13, 12, and 11 
+          pinMode(13, OUTPUT);
+          pinMode(12, OUTPUT);
+          pinMode(11, OUTPUT); 
+        }
+
+        // the loop function runs over and over again forever
+        void loop() {
+      
+          // variable to control the delay for blinking
+          int delay = 500; 
+        
+          // turn on pin 13 for 500ms
+          digitalWrite(13, HIGH);
+          delay(delay);
+        
+          // turn off pin 13 for 500ms
+          digitalWrite(13, LOW);
+          delay(delay);
+        
+          // turn on pin 12 for 500ms
+          digitalWrite(12, HIGH); 
+          delay(delay);
+        
+          // turn off pin 12 for 500ms
+          digitalWrite(12, LOW);
+          delay(delay);
+        
+          // turn on pin 11 for 500ms
+          digitalWrite(11, HIGH);
+          delay(delay);
+        
+          // turn off pin 11 for 500ms
+          digitalWrite(11, LOW);
+          delay(delay);  
+        }
+        
+      </pre>
+    </code>
+
+    <div class="additional-questions">
+
+      <h2>Additional Questions</h2>
+      <p>1. <img src="img/A1/Graph.jpeg"></p>
+
+      <p>2. There are 14 digital pins on the Arduino which means
+        we could connect 14 different LEDs to the Arduino.
+        Assuming we are using 5V and red LEDs (1.8 forward voltage) and resistance of 220 ohms
+        we can see that (5-1.8)/220 = 14.5mA. Multiply that by 14 and we get 203mA of current
+      </p>
+
+      <p>4. Changing the delay to about 4 milliseconds made it so that
+        I was unable to tell if the LEDs were blinking or not.
+      </p>
+
+    </div>
+
+
+    
   </body>
 </html>
