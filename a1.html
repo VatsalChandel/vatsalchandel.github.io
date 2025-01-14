@@ -104,10 +104,9 @@
       <h2>Additional Questions</h2>
       <p>1. <img src="img/A1/Graph.jpeg"></p>
 
-      <p>2. There are 14 digital pins on the Arduino which means
-        we could connect 14 different LEDs to the Arduino.
-        Assuming we are using 5V and red LEDs (1.8 forward voltage) and resistance of 220 ohms
-        we can see that (5-1.8)/220 = 14.5mA. Multiply that by 14 and we get 203mA of current
+      <p>2. There are 14 digital pins on the Arduino which means we could connect 14 different LEDs
+        but that might be too much for the Arduino to handle because of the 200 mA limit.
+        This means that we can only connect 10 LEDs beacuse 10 * 20mA = 200aM which just touches the limit 
       </p>
 
       <p>4. Changing the delay to about 4 milliseconds made it so that
