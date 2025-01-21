@@ -4,15 +4,137 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
 
-    <title>Example Student's HCDE 439 Physical Computing Page!</title>
+    <title>Vatsal Chandel A2 Fade!</title>
 
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Example Student's Assignment 2!</h1>
-    <div class="header">
-      <img src="red-panda.jpg" />
-      <p>Here is all the documentation for assignment 2!</p>
+
+    <h1>Vatsal Chandel A2 Fade!</h1>
+
+    <br>
+
+    <h2>Circuit and Gif</h2>
+
+    <div class="image-container">
+      <div class="image-wrapper">
+        <img class="circuit" src="img/A2/Circuit.jpeg" />
+        <p>
+          For the circuit, I chose to use Red, Blue and Green LEDs. I used a resistance of 220 ohms for each LED because after doing the calculations, I found that the maximum Resistance I would need is 160 ohms. 220 was the closest standard resistance value.
+        </p>
+      </div>
+
+      <div class="image-wrapper">
+        <img src="img/A2/circuitgif.gif" />
+        <p>This is the gif for the circuit</p>
+      </div>
     </div>
+
+    <h2>Schematic and Resistance</h2>
+
+    <div class="image-container">
+      <div class="image-wrapper">
+        <img src="img/A2/schematic.jpeg" />
+        <p>
+          The schematic for the circuit
+        </p>
+      </div>
+
+      <div class="image-wrapper">
+        <img src="img/A2/Resistance.jpeg" />
+        <p>These are the calculations for the resistance of the LEDs
+          I found that Blue needed a minimum of 85 ohms, Red and Green needed a minimum of 160 ohms.
+        </p>
+      </div>
+    </div>
+
+    <h2>Code for A2 Fade</h2>
+    <code>
+      <pre>
+                
+        // Initialize button state to keep track of the current state
+        int buttonState = 0;
+
+        // Initialize lastButtonState to keep track of the previous state
+        int lastButtonState = 0;  
+
+        // Initialize isOn to keep track if button is on or off 
+        bool isOn = false;    
+
+        void setup()
+        {
+          // Initialize button 2 as input 
+          pinMode(2, INPUT);
+
+          // Initialize pins 13, 9, and 8 as output
+          pinMode(13, OUTPUT);
+          pinMode(9, OUTPUT); 
+          pinMode(8, OUTPUT); 
+        }
+
+        void loop()
+        {
+          // Read the current state of the button 
+          buttonState = digitalRead(2);
+          
+          // Check if the button is pressed 
+            // Need button state to be LOW and last button state to be HIGH
+          if (buttonState == LOW && lastButtonState == HIGH) {
+            // Change isOn to TRUE 
+            isOn = !isOn;  
+            delay(50);     
+          }
+          
+          // If isOn is true, turn on 13, 9, and turn off 8
+          if (isOn) {
+            digitalWrite(13, HIGH);
+            digitalWrite(9, HIGH); 
+            digitalWrite(8, LOW);
+
+
+            // Fade pin 9 from 0 to 250 in increments of 50
+            for (int fade = 0; fade <= 250; fade += 50) {
+              analogWrite(9, fade);
+              delay(100); 
+            }
+            
+            // Fade pin 9 from 250 to 0 in increments of 50
+            for (int back = 250; back >= 0; back -= 50) {
+              analogWrite(9, back);
+              delay(100); 
+            }
+            
+            // Small pause 
+            delay(200);
+
+
+          // If isOn is false, turn off 13, 9, and turn on 8
+          } else {
+            digitalWrite(13, LOW);
+            digitalWrite(9, LOW); 
+            digitalWrite(8, HIGH); 
+          }
+
+          // Save the current state of the button for the next iteration
+          lastButtonState = buttonState;  
+        }
+        
+      </pre>
+    </code>
+
+    <div class="additional-questions">
+      <h2>Additional Questions</h2>
+        <img src="img/A2/additionalQs.jpeg">
+        <p>
+          For the graph, the Red line indicates analog write at 255, the Blue line indicates analog write at 128 and the Green line indicates analog write at 64. 
+        </p>
+
+        <p>
+          Given the schematic, circuit, and firmware, I expect that the circuit will run for 48 hours. 
+        </p>
+    </div>
+
+
+
   </body>
 </html>
