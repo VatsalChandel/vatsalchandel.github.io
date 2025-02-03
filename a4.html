@@ -161,8 +161,7 @@
           
           # List to store read IR Values
           values = []
-          # Set a 10% ok range
-          error = 0.1  
+          # error = # some acceptable error range
 
           def get_sensor_reading():
               # Read the IR sensor
@@ -179,7 +178,7 @@
 
               # if th reading is outside the error range, return the averaged value
               # else return the sensor read reading
-              if abs(reading - avg_value) > error:
+              if abs(reading - avg_value) > error: # error is some acceptable error range
                   return avg_value  
               else:
                   return reading  
