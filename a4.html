@@ -180,7 +180,7 @@
               # if th reading is outside the error range, return the averaged value
               # else return the sensor read reading
               if abs(reading - avg_value) > error:
-                  return smoothed_value  
+                  return avg_value  
               else:
                   return reading  
         </pre>
