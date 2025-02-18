@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Vatsal Chandel A5 Higher Voltage!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Vatsal Chandel A5 Higher Voltage!!</h1>
+
+    <br>
+
+    <h2>Circuit and Gif</h2>
+
+    <div class="image-container">
+      <div class="image-wrapper">
+
+        <img class="circuit" src="img/A5/circuit.jpeg" />
+        <p>For the circuit, I connected a DC motor to a battery and controlled the speed of the motor through my IR remote. The buttons 0, 1, and 2 allowed the motor to rotate at different speeds.
+        </p>
+
+      </div>
+
+      <div class="image-wrapper">
+
+        <img src="img/A5/My Movie 13.gif" />
+        <p>This is my gif of my circuit where each button controls the different speed of the motor. </p>
+
+      </div>
+    </div>
+
+    <h2>Schematic</h2>
+
+    <div class="image-container">
+      <div class="image-wrapper">
+        <img src="img/A5/schematic.jpeg" />
+        <p>This is the schematic for the circuit</p>
+      </div>
+    </div>
+
+    <h2>Code for A5 Higher Voltage</h2>
+    <code>
+      <pre>
+            #include &lt;IRremote.h&gt;
+
+            // setting my variables for my 
+            // IR Pin 
+            int ir = 2;
+            // motor Pin 
+            int motorPin = 9;
+            // motor speed
+            int motorSpin = 0; 
+            // variable to keep track of time 
+            unsigned long motorStartTime = 0;
+            
+            void setup() {
+              // Intialize my IR reciever to get ready to read 
+              IrReceiver.begin(ir, ENABLE_LED_FEEDBACK);
+              // Begin outputting to serial 
+              Serial.begin(9600);
+              // Setting my motorPin(9) to output 
+                // Here it is set as LOW which means 0V
+                // and wont change untill analogWrite is used later 
+              pinMode(motorPin, OUTPUT);  
+            }
+            
+            void loop() {
+              // Checks to see if an IR signal was recieved 
+              if (IrReceiver.decode()) {
+                // Catches the code from the IR reciever and decodes it 
+                unsigned long code = IrReceiver.decodedIRData.decodedRawData;
+                // Prints out the code (For my debugging purposes) 
+                Serial.println(code, HEX); 
+            
+                // Different cases for different buttons 
+                switch (code) {
+                  case 0xE916FF00:  // Button 0
+                    // returns the number of miliseconds it has 
+                    // been since the arduino started running 
+                    motorStartTime = millis();
+                    // setting our motorSpin variable to 200 (out of 255) 
+                    motorSpin = 200; 
+                    break;
+                  case 0xF30CFF00:  // Button 1
+                    // returns the number of miliseconds it has 
+                    // been since the arduino started running 
+                    motorStartTime = millis();
+                    // setting our motorSpin variable to 128 (out of 255) 
+                    motorSpin = 128; 
+                    break;
+                  case 0xE718FF00:  // Button 2
+                    // returns the number of miliseconds it has 
+                    // been since the arduino started running 
+                    motorStartTime = millis();
+                    // setting our motorSpin variable to 100 (out of 255) 
+                    motorSpin = 100; 
+                    break;
+            
+                  default: // default case 
+                    // reset our timer 
+                    motorStartTime = 0;
+                    break;
+                }
+            
+                  // Runs the motor for 3 seconds 
+                   while (millis() - motorStartTime <= 3000) {
+                      // Keep sending analogWrite at the desired 
+                      // motorSpin speed 
+                      analogWrite(9, motorSpin);  
+                    }
+                    // reset the motor spin to 0 
+                    motorSpin = 0;
+                  // small delay before reading the next IR signal 
+                  delay(100); 
+            
+            
+                // resumt the IR reciever for next signal 
+                IrReceiver.resume();
+              }
+            }
+            
+
+        
+      </pre>
+    </code>
+
+    <div class="additional-questions">
+
+      <h2>Additional Questions</h2>
+        <p>1. The absolute maximum amount of current between pins 2 and 3 depends on if it is Continuous or Pulsed. Continuous has a maximum of 37.2A at 25 degrees C. Pulsed has a maximum of 80A.</p>
+
+        <p>2: Draw a schematic for a circuit with using at least your arduino, a DC motor, a flyback diode, and capacitors between power and ground. Find parts with datasheets you could use for each of these schematic components.</p>
+        <p>This is my schematic for my arduino, DC motor, and flyback diode.</p>
+
+        <div class="image-wrapper">
+            <img src="img/A5/additional1.jpeg" />
+        </div>
+
+        <p>3: Here is the datasheet for the L293D chip: https://www.ti.com/product/L293DLinks to an external site.. Draw a schematic using at least your arduino, this chip, and two motors. Write (pseudo) code that shows how you would move the motors both forward, both back, then one forward one back, and one back then forward.</p>
+        <p>This is my schematic for my arduino, and the L293D chip.</p>
+        <div class="image-wrapper">
+            <img src="img/A5/additional2.jpeg" />
+
+            <p>Here is the pseudo code for moving the motors in different directions</p>
+            <pre>
+                <code>
+                    // Initialize the Pins 
+                    int motor1_p1 = 8;
+                    int motor1_p2 = 9;
+
+                    int motor2_p1 = 10; 
+                    int motor2_p2 = 11;
+
+                    void setup() {
+                      // Set the motor pins to output 
+                      pinMode(motor1_p1, OUTPUT);
+                      pinMode(motor1_p2, OUTPUT);
+                      pinMode(motor2_p1, OUTPUT);
+                      pinMode(motor2_p2, OUTPUT);
+                    }
+
+                    void loop() {
+                        // Both move forwards
+                        digitalWrite(MOTOR1_IN1, HIGH);
+                        digitalWrite(MOTOR1_IN2, LOW);
+                        digitalWrite(MOTOR2_IN1, HIGH);
+                        digitalWrite(MOTOR2_IN2, LOW);
+                        delay(2000); 
+
+
+                        // Both move backward
+                        digitalWrite(MOTOR1_IN1, LOW);
+                        digitalWrite(MOTOR1_IN2, HIGH);
+                        digitalWrite(MOTOR2_IN1, LOW);
+                        digitalWrite(MOTOR2_IN2, HIGH);
+                        delay(2000);
+                    
+                        // One forward, one backward
+                        digitalWrite(MOTOR1_IN1, HIGH);
+                        digitalWrite(MOTOR1_IN2, LOW);
+                        digitalWrite(MOTOR2_IN1, LOW);
+                        digitalWrite(MOTOR2_IN2, HIGH);
+                        delay(2000);
+                    }
+             
+                </code>
+            </pre>
+        </div>
+
+    </div>
+
+
+    
+  </body>
+</html>
