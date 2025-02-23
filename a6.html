@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Vatsal Chandel A6 Talking to the Web!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Vatsal Chandel A6 Talking to the Web!!</h1>
+
+    <br>
+
+    <h2>Circuit and Gif</h2>
+
+    <div class="image-container">
+      <div class="image-wrapper">
+
+        <img class="circuit" src="img/A6/circuit.jpeg" />
+        <p>For the circuit, I connected a DC motor to a battery and controlled the speed of the motor based on the position of the x-axis of the joystick. I also connected a red LED to the circuit that would change brightness based on the y-axis of the joystick. I also made it so that when you click 1 on the keyboard, the motor spins at full speed and the LED is at full brightness.
+        </p>
+
+      </div>
+
+      <div class="image-wrapper">
+
+        <img src="img/A6/My Movie 13 (2).gif" />
+        <p>This is my gif of my circuit where the position of the x and y axis of the joystick would change the speed of the motor and the brightness of the LED </p>
+
+      </div>
+    </div>
+
+    <h2>Schematic</h2>
+
+    <div class="image-container">
+      <div class="image-wrapper">
+        <img src="img/A6/schematic.jpeg" />
+        <p>This is the schematic for the circuit. For the resistance of the Red LED, I chose to use 220 ohms because Red LEDs have a voltage drop of 1.8 Vs. So resistance equals (5V-1.8V) / 20Ma which equals 160 ohms. 220 is a safe standard value. </p>
+      </div>
+    </div>
+
+    <h2>Code for A6 Talking to Web</h2>
+    <div>
+      <h3>Code for Arduino</h3>
+      <code>
+        <pre>
+          // Initialize variables for my 
+          // Joystick 
+          int x = A0;    
+          int y = A1;
+          int led = 5; 
+          int motorPin = 9;
+
+          // Initialize X and Y values from Joystick
+          int xval = 0;
+          int yval = 0;
+
+
+          // Variables to keep track of time and current mode 
+          long startTime = 0;
+          bool mode = false;
+          
+          void setup() {
+            // begin serial communication
+            Serial.begin(9600);
+            // Set up the LED and Motor pins as output 
+            pinMode(motorPin, OUTPUT);  
+            pinMode(led, OUTPUT); 
+          }
+          
+          void loop() {
+            // Check for incoming serial commands
+            if (Serial.available() > 0) {
+              // Catch the current command 
+              char command = Serial.read();
+              // If the command is 1, set the mode to True and then start timer 
+              if (command == '1') {
+                mode = true;
+                startTime = millis();
+              }
+            }
+            
+            // If in mode, keep motor and LED high for 5 seconds
+            if (mode) {
+              if (millis() - startTime < 5000) {
+                analogWrite(motorPin, 255);
+                analogWrite(led, 255);
+              } else {
+                // set the mode to false 
+                mode = false; 
+              }
+            }
+            
+            // If not in mode, operate
+            // using joystick as commands 
+            if (!mode) {
+              xval = analogRead(x);
+              yval = analogRead(y);
+              int motorSpin = map(xval, 0, 1023, 0, 255);
+              analogWrite(motorPin, motorSpin);
+              analogWrite(led, yval);
+            }
+          }
+        </pre>
+      </code>
+    </div>
+
+    <div>
+      <h3>Code for p5.js</h3>
+      <code>
+        <pre>
+          // baud rate for serial communication
+          const BAUD_RATE = 9600; 
+
+          let port, connectBtn; // Declare global variables
+
+          // Initialize variables for motor and LED values
+          let motorVal = 0;
+          let ledVal = 0;
+
+          function setup() {
+            setupSerial(); // Run our serial setup function (below)
+
+            // Create a canvas that is the size of our browser window.
+            // windowWidth and windowHeight are p5 variables
+            createCanvas(windowWidth, windowHeight);
+
+            // p5 text settings. BOLD and CENTER are constants provided by p5.
+            // See the "Typography" section in the p5 reference: https://p5js.org/reference/
+            textFont("system-ui", 50);
+            textStyle(BOLD);
+            textAlign(CENTER, CENTER);
+          }
+
+          function draw() {
+            const portIsOpen = checkPort(); // Check whether the port is open (see checkPort function below)
+            if (!portIsOpen) return; // If the port is not open, exit the draw loop
+
+            let str = port.readUntil("\n"); // Read from the port until the newline
+            if (str.length == 0) return; // If we didn't read anything, return.
+            
+
+            // trim the whitespace (the newline) and convert the string to a number
+            // If there are no two inputs (led, motor) return and try again
+            const tokens = str.trim().split(",");
+            if (tokens.length < 2) return;
+
+
+            
+       
+            // store the motor and led values from tokens 
+            motorVal = Number(tokens[0]);
+            ledVal = Number(tokens[1]);
+
+            // Map the motor value to a hue value
+            let hueValue = map(motorVal, 0, 255, 120, 0);
+            // Map the led value to a brightness value
+            let brightness = map(ledVal, 0, 1023, 0, 200); 
+
+            // Set the background color based on the motor and led values
+            background(hueValue, 100, brightness);
+            fill(0); 
+            // Draw the text on the screen
+            text("Motor: " + motorVal, windowWidth / 2, windowHeight / 2 - 50);
+            text("LED: " + ledVal, windowWidth / 2, windowHeight / 2 + 50);
+            
+          }
+          // A function to handle keyboard and arduino communication 
+          function keyPressed() {
+            // If the "1" key is pressed, send a '1' command to trigger mode.
+            if (key === '1') {
+              if (port && port.opened()) {
+                port.write('1');
+              }
+            }
+          }
+
+          // Three helper functions for managing the serial connection. (taken from lecture)
+          function setupSerial() {
+            port = createSerial();
+
+            // Check to see if there are any ports we have used previously
+            let usedPorts = usedSerialPorts();
+            if (usedPorts.length > 0) {
+              // If there are ports we've used, open the first one
+              port.open(usedPorts[0], BAUD_RATE);
+            }
+
+            // create a connect button
+            connectBtn = createButton("Connect to Arduino");
+            connectBtn.position(5, 5); // Position the button in the top left of the screen.
+            connectBtn.mouseClicked(onConnectButtonClicked); // When the button is clicked, run the onConnectButtonClicked function
+          }
+
+          function checkPort() {
+            if (!port.opened()) {
+              // If the port is not open, change button text
+              connectBtn.html("Connect to Arduino");
+              // Set background to gray
+              background("gray");
+              return false;
+            } else {
+              // Otherwise we are connected
+              connectBtn.html("Disconnect");
+              return true;
+            }
+          }
+
+          function onConnectButtonClicked() {
+            // When the connect button is clicked
+            if (!port.opened()) {
+              // If the port is not opened, we open it
+              port.open(BAUD_RATE);
+            } else {
+              // Otherwise, we close it!
+              port.close();
+            }
+          }
+        </pre>
+      </code>
+   
+
+    
+  </body>
+</html>
