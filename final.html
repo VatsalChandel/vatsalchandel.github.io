@@ -1,15 +1,159 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
 
-    <img src="proposal.png" />
+    <title>Vatsal Chandel Final Project!</title>
 
-  
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Vatsal Chandel Final Project!</h1>
+
+    <br>
+
+    <div class="section">
+        <h2>Description of Concept</h2>
+
+        <div class="iamge-wrapper">
+            <img src="img/Final/proposal.png">
+        </div>
+        
+        <br>
+
+        <p>
+            My prototype is a device that allows pets to automatically get treats by walking up to the Snack Bot. I envision this device to use an ultrasonic sensor to detect how far a pet is, and open a trap door with a use of a motor if the pet is close enough. 
+        </p>
+    </div>
+
+
+
+    <div class="section">
+        <h2>Technical Implementation</h2>
+
+        <h3>Schematic</h3>
+            <div class="iamge-wrapper">
+                <img src="img/Final/Schematic.jpeg">
+            </div>
+
+        <h3>Circuit</h3>
+        <div class="image-container">
+            <div class="image-wrapper">
+                <img src="img/Final/Circuit.jpeg">
+            </div>
+        </div>
+
+
+        <h3>Code</h3>
+        <code>
+            <pre>
+                #include &lt;Servo.h&gt;
     
-</body>
+                // Ultrasonic Sensor Pins
+                const int trigPin = 12;
+                const int echoPin = 13;
+                
+                // Servo Motor
+                Servo myServo;
+                const int servoPin = 8;
+                
+                void setup() {
+                    //initialze pin 4 as output
+                    // This is so that I wont have to use a bread board for power
+                    pinMode(4, OUTPUT);
+                
+                    // Initialize Servo
+                    myServo.attach(servoPin);
+                    // Start the Servo at 0 degrees 
+                    myServo.write(0);  
+                
+                    // Setup Ultrasonic Sensor Pins
+                    pinMode(trigPin, OUTPUT);
+                    pinMode(echoPin, INPUT);
+                
+                    // Start Serial Monitor
+                    Serial.begin(9600);
+                }
+                
+                void loop() {
+                    // Used a pin as power 
+                    digitalWrite(4, HIGH);
+                    
+                    // Intialize variables for Ultrasonic Sensor 
+                    long duration, inches;
+                
+                    // Trigger Ultrasonic Sensor
+                    // Taken from Sensor example in Arduino IDE 
+                    digitalWrite(trigPin, LOW);
+                    delayMicroseconds(2);
+                    digitalWrite(trigPin, HIGH);
+                    delayMicroseconds(10);
+                    digitalWrite(trigPin, LOW);
+                
+                    // Measure Echo Pulse Duration
+                    duration = pulseIn(echoPin, HIGH);
+                
+                    // Convert to Inches
+                    inches = duration / 74 / 2;
+                
+                    // Print Distance
+                    Serial.print("Distance: ");
+                    Serial.print(inches);
+                    Serial.println(" inches");
+                
+                    // Control the Servo based on Distance
+                    // If something is less than 10 inches 
+                    // Move the servo to open the trap door 
+                    if (inches <= 10) {
+                        // Open door
+                        myServo.write(90);  
+                    } else {
+                        // Close door
+                        myServo.write(0);  
+                    }
+                    // Delay to prevent jitter
+                    delay(500); 
+                }
+                
+            
+            
+            </pre>
+        </code>
+    </div>
+
+    <div class="section">
+        <h2>Writeup</h2>
+
+        <p>
+            This prototype works primarily because of the ultrasonic sensor and the servo motor inside the cardboard box. I connected the Ultrasonic Sensor's Trigger pin to pin 12 an the Echo pin to pin 13 on the arduino. The ultrasonic was connected to the 5 Volt pin. I then connected a Servo to pin 8 for signal.
+        </p>
+
+
+        <p>
+            With all of the circuits in place, I then did some testing with the ultrasonic sensor to see what a good distance was for something to trigger my motor. This involved a lot of serial prints. I decided that 10 inches or less was a good idea. This meant that something that is 10 inches or closer will activate the servo and in turn open the trapdoor to release the treats. I played around with the code and used the example that comes with the Arduino IDE that deals with the Ultrasonic sensor, and added some code to operate the motor depending on the distance. 
+        </p>
+
+        <p>
+            I then used an old cardboard box and cut the bottom flap so that it could act as a trap door. I then cut a small window towards the top of the box so I could place the ultrasonic sensor. Right behind the sensor on the inside of wall of the box, I placed the servo motor. On the servo motor, I attached a small skewer to give me more rotation and space to tie some string. I then put the string on the bottom of the trap door with the use of another skewer. 
+        </p>
+
+        <p>
+            Once all of the components were inside the cardboard box, I then tested to see if the door would open and close on its own if something like my hand got closer to the sensor. Once the door was able to open and close on its own, I then tested the strength of the string to see how much weight it could hold. To do this, I placed candy on the trapdoor and saw that it could successfully hold about 10 pieces of candy. From there I took another box and put the arduino and wires in there to hide the cables. I also put my portable charger there to power the whole thing. From there I attached that box behind Snack Bot. I did this because it gave an easy way to hide the cables and lifted the bot enough so that the trapdoor would be able to open, close, and drop candy.  
+
+        </p>
+
+
+    </div>
+
+    <div class="section">
+        <h2>Video</h2>
+        <iframe width="1920" height="1080" src="https://www.youtube.com/embed/AHjNceVaUzg"></iframe>
+    </div>
+
+   
+
+
+    
+  </body>
 </html>

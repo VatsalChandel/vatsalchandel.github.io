@@ -28,6 +28,14 @@ body {
   margin: auto;
 }
 
+.section {
+  margin-bottom: 25px;
+}
+
+.section p{
+  margin-bottom: 25px;
+}
+
 h1 {
   font-weight: 800;
 }
